@@ -8,11 +8,18 @@ import firebase from "../protected/Firebase";
 import "react-toastify/dist/ReactToastify.css";
 import { storage } from "../protected/Firebase";
 import "react-datepicker/dist/react-datepicker.css";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import config from '../../config.json';
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 export default class Signup extends Component {
 
   state = {
+    file:undefined,
     asa: ["Individual", "Business"],
     asastate: "Business",
     userDate: new Date(),
@@ -38,13 +45,15 @@ export default class Signup extends Component {
     if (phone.length <= 8) { toast.configure(); toast.error("Phone number length must be bigger then 8",{autoClose: 2000,}); return;}
     if (!email.includes("@")) { toast.configure();toast.error("Email is invalid", {autoClose: 2000,}); return;}
     
+    this.fileselecthandler()
+    setTimeout(() => {      
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((response) => {
         this.setState({ popUp2: false });
         firebase.firestore().collection("users").doc(response.user.uid).set({
             uid: response.user.uid,
             name,
-            profileImageURL: sessionStorage.getItem("imgurl") ? sessionStorage.getItem("imgurl") : "https://firebasestorage.googleapis.com/v0/b/altro-db7f0.appspot.com/o/users%2F1593953149041.jpg?alt=media&token=62bd1a4f-78f6-4a94-b0b6-3b9ecbf27c8a",
+            profileImageURL: sessionStorage.getItem("imgurl") ? sessionStorage.getItem("imgurl") : config.FIREBASE_DEAFULT_IMG,
             phone,
             isBusiness: this.state.isBusiness,
             isVerified: false,
@@ -66,13 +75,14 @@ export default class Signup extends Component {
         toast.error("Somthing went wrong", {autoClose: 2000,});
         return;
       });
+    }, 7000);
   };
 
   
-  fileselecthandler = (e) => {
-    const uploadTask = storage.ref(`/users/${e.target.files[0].name}`).put(e.target.files[0]);
+  fileselecthandler = () => {
+    const uploadTask = storage.ref(`/users/${this.state.file.file.name}`).put(this.state.file.file);
     toast.configure();
-    toast.warning("Upload...", {autoClose: 5000});
+    toast.warning("Upload...", {autoClose: 7000});
     uploadTask.on("state_changed",
       (snapshot) => {console.log((snapshot.bytesTransferred / snapshot.totalBytes) * 100)},
       (error) => {},
@@ -99,9 +109,9 @@ export default class Signup extends Component {
               )
           )}
           </div>
-          <br />
-          <label htmlFor="file-input" style={{ cursor: "pointer" }}><AccountCircleIcon style={{ fontSize: 100, color: "rgb(45, 123, 212)" }}/></label>
-          <input style={{ display: "none" }} id="file-input" type="file" onChange={this.fileselecthandler}
+          <br /><br/>
+          <FilePond allowMultiple={false}allowReplace={false}
+            onaddfile={(err, file) => this.setState({file})} onremovefile={(err, file) => {}}
           />
           <br />
           <p>Add profile picture(optional)</p>
