@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../Jobs.css";
-import { addNotification, GeoName } from "../../functions/helper";
+import { addNotification, GeoName , calcCrow } from "../../functions/helper";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
@@ -168,7 +168,7 @@ export default class Myjobs extends Component {
             creatingUserId: doc.data().creatingUserId,
             numberOfSaves: doc.data().numberOfSaves,
             numberOfViews: doc.data().numberOfViews,
-            km: this.calcCrow(doc.data().location.Ba, doc.data().location.Oa),
+            km: calcCrow(doc.data().location.Ba, doc.data().location.Oa , this.state.lat , this.state.lng),
             Geoname: GeoName(doc.data().location.Ba, doc.data().location.Oa),
 
             viewport: {
@@ -244,7 +244,7 @@ export default class Myjobs extends Component {
             creatingUserId: doc.data().creatingUserId,
             numberOfSaves: doc.data().numberOfSaves,
             numberOfViews: doc.data().numberOfViews,
-            km: this.calcCrow(doc.data().location.Ba, doc.data().location.Oa),
+            km: calcCrow(doc.data().location.Ba, doc.data().location.Oa , this.state.lat , this.state.lng),
             Geoname: GeoName(doc.data().location.Ba, doc.data().location.Oa),
             viewport: {
               latitude: 32.12257459473794,
@@ -324,20 +324,6 @@ export default class Myjobs extends Component {
       });
     this.getData();
   };
-
-  calcCrow(lon2, lat2, unit) {
-    var radlat1 = (Math.PI * this.state.lat) / 180;
-    var radlat2 = (Math.PI * lat2) / 180;
-    var theta = this.state.lng - lon2;
-    var radtheta = (Math.PI * theta) / 180;
-    var dist =
-      Math.sin(radlat1) * Math.sin(radlat2) +
-      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    dist = Math.acos(dist);
-    dist = (dist * 180) / Math.PI;
-    dist = dist * 60 * 1.1515;
-    return dist;
-  }
 
   toconfirmedUsers = (job) => {
     firebase

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GeoName , calcCrow  , applyJob} from "../../functions/helper";
+import { GeoName , calcCrow  , applyJob , getUserName , getUserRate , getUserGeoName , getUserPic} from "../../functions/helper";
 import { toast } from "react-toastify";
 import "./Job.css";
 import Filter from "@material-ui/icons/FilterList";
@@ -115,83 +115,21 @@ export default class Search extends Component {
 
   saveJob = (job) => {
     let docRef = firebase.firestore().collection("jobs").doc(job.id);
-    docRef.get().then((doc) => {
-      this.setState({ savedIds: doc.data().savedIds });
-    });
+    docRef.get().then((doc) => {this.setState({ savedIds: doc.data().savedIds })});
     if (this.state.savedIds.includes(sessionStorage.getItem("uid"))) {
       toast.configure();
       toast.warning("Already saved", { autoClose: 2000 });
       return;
     }
     this.state.savedIds.push(sessionStorage.getItem("uid"));
-    firebase
-      .firestore()
-      .collection("jobs")
-      .doc(job.id)
-      .update({ savedIds: this.state.savedIds });
+    firebase.firestore().collection("jobs").doc(job.id).update({ savedIds: this.state.savedIds });
     toast.configure();
     toast.info("Job saved", { autoClose: 2000 });
   };
 
   handleSearch = () => {
     this.setState({ filterpop: !this.state.filterpop });
-    setTimeout(() => {
-      this.getData();
-    }, 1);
-  };
-
-  setMap = () => {
-    this.setState({ mappop: !this.state.mappop, filterpop: false });
-  };
-
-  dateFilterFunc = (v) => {
-    this.setState({
-      endDateValue: new Date(new Date().setDate(new Date().getDate() + v)),
-      dateValID: v,
-    });
-  };
-
-  RadiusFilterFunc = (v) => {
-    this.setState({ kmFilter: v, radiusValID: v });
-  };
-
-  getUserName = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        return arr[i].name;
-      }
-    }
-  };
-
-  getUserPic = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        return arr[i].profileImageURL;
-      }
-    }
-  };
-
-  getUserRate = (id , allUsers) => {
-    for (var i = 0; i < allUsers.length; i++) {
-      if (allUsers[i].id === id) {
-        return allUsers[i].employerRating;
-      }
-    }
-  };
-
-  getUserGeoName = (id) => {
-    const arr = this.state.allLocations;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        if (arr[i].Geo === "") {
-          return "";
-        } else {
-          return ", " + arr[i].Geo;
-        }
-      }
-    }
+    setTimeout(() => {this.getData()}, 1);
   };
 
   render() {
@@ -200,25 +138,11 @@ export default class Search extends Component {
     return (
       <div style={{ textAlign: "center" }}>
         <div className="myjobs-main-head-flex">
-          <p
-            className="job-top-flex-p"
-            onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })}
-            style={{ color: "rgb(45, 123, 212)" }}
-          >
-            <Filter style={{ color: "rgb(45, 123, 212)", fontSize: 15 }}>
-              add_circle
-            </Filter>
-            {lang ? "סינון" : "Filter"}
+          <p className="job-top-flex-p" onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })} style={{ color: "rgb(45, 123, 212)" }}>
+            <Filter style={{ color: "rgb(45, 123, 212)", fontSize: 15 }}>add_circle</Filter>{lang ? "סינון" : "Filter"}
           </p>
-          <p
-            className="job-top-flex-p"
-            onClick={() => this.setMap()}
-            style={{ color: "rgb(45, 123, 212)" }}
-          >
-            <MapIcon style={{ color: "rgb(45, 123, 212)", fontSize: 15 }}>
-              add_circle
-            </MapIcon>
-            {lang ? "מפה" : "MapView"}
+          <p className="job-top-flex-p"onClick={() => this.setState({ mappop: !this.state.mappop, filterpop: false })}style={{ color: "rgb(45, 123, 212)" }}>
+            <MapIcon style={{ color: "rgb(45, 123, 212)", fontSize: 15 }}>add_circle</MapIcon>{lang ? "מפה" : "MapView"}
           </p>
         </div>
         {this.state.filterpop ? (
@@ -227,189 +151,43 @@ export default class Search extends Component {
               <h3> {lang ? "סינון עבודה" : "Job filter"}</h3>
               <p> {lang ? "סינון לפי מרחק" : "How far can you go?"}</p>
               <div className="filter-card-flex">
-                <p
-                  style={
-                    this.state.radiusValID === 5
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.RadiusFilterFunc(5)}
-                >
-                  5 km
-                </p>
-                <p
-                  style={
-                    this.state.radiusValID === 15
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.RadiusFilterFunc(15)}
-                >
-                  15 km
-                </p>
-                <p
-                  style={
-                    this.state.radiusValID === 25
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.RadiusFilterFunc(25)}
-                >
-                  25 km
-                </p>
-                <p
-                  style={
-                    this.state.radiusValID === 50
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.RadiusFilterFunc(50)}
-                >
-                  50 km
-                </p>
-                <p
-                  style={
-                    this.state.radiusValID === 100
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.RadiusFilterFunc(100)}
-                >
-                  100 km
-                </p>
-                <p
-                  style={
-                    this.state.radiusValID === 10000
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.RadiusFilterFunc(10000)}
-                >
-                  100+ km
-                </p>
+                <p style={this.state.radiusValID === 5? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({ kmFilter: 5, radiusValID: 5 })}>5 km</p>
+                <p style={this.state.radiusValID === 15? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({ kmFilter: 15, radiusValID: 15 })}>15 km</p>
+                <p style={this.state.radiusValID === 25? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({ kmFilter: 25, radiusValID: 25 })}>25 km</p>
+                <p style={this.state.radiusValID === 50? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({ kmFilter: 50, radiusValID: 50 })}>50 km</p>
+                <p style={this.state.radiusValID === 100? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({ kmFilter: 100, radiusValID: 100 })}>100 km</p>
+                <p style={this.state.radiusValID === 10000? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({ kmFilter: 10000, radiusValID: 10000 })}>100+ km</p>
               </div>
               <p>{lang ? "סינון לפי זמן" : "When?"}</p>
               <div className="filter-card-flex">
-                <p
-                  style={
-                    this.state.dateValID === 0
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.dateFilterFunc(0)}
-                >
-                  Today
-                </p>
-                <p
-                  style={
-                    this.state.dateValID === 1
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.dateFilterFunc(1)}
-                >
-                  Tomorrow
-                </p>
-                <p
-                  style={
-                    this.state.dateValID === 7
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.dateFilterFunc(7)}
-                >
-                  This week
-                </p>
-                <p
-                  style={
-                    this.state.dateValID === 1000
-                      ? {
-                          background: "rgb(45, 123, 212)",
-                          padding: "0.1em 0.5em",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                  onClick={() => this.dateFilterFunc(1000)}
-                >
-                  Next week
-                </p>
+                <p style={this.state.dateValID === 0? {  background: "rgb(45, 123, 212)",  color: "white",}: {}}
+                  onClick={() => this.setState({endDateValue: new Date(new Date().setDate(new Date().getDate() + 0)),dateValID: 0}) }>Today</p>
+                <p style={this.state.dateValID === 1? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({endDateValue: new Date(new Date().setDate(new Date().getDate() + 1)),dateValID: 1}) }>Tomorrow</p>
+                <p style={this.state.dateValID === 7? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({endDateValue: new Date(new Date().setDate(new Date().getDate() + 7)),dateValID: 7}) }>This week</p>
+                <p style={this.state.dateValID === 1000? {background: "rgb(45, 123, 212)",color: "white",}: {}}
+                  onClick={() => this.setState({endDateValue: new Date(new Date().setDate(new Date().getDate() + 1000)),dateValID: 1000})}>Next week</p>
               </div>
             </div>
             <div className="filter-card-flex2">
-              <button
-                className="filter-card-cancel"
-                onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })}
-              >
-                {lang ? "ביטול" : "Cancel"}
-              </button>
-              <button
-                className="filter-card-search"
-                onClick={() => this.handleSearch()}
-              >
-                {lang ? "חיפוש" : "Search"}
-              </button>
+              <button className="filter-card-cancel" onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })}>{lang ? "ביטול" : "Cancel"}</button>
+              <button className="filter-card-search" onClick={() => this.handleSearch()}>{lang ? "חיפוש" : "Search"}</button>
             </div>
-          </div>
-        ) : (
-          ""
-        )}
+          </div>) : ("")}
         {this.state.mappop ? (
           <div className="map-card-main">
-            <Mapview
-              locations={this.state.locations}
-              setMap={this.setMap}
-              lat={this.state.lat}
-              lng={this.state.lng}
-            />
-          </div>
-        ) : (
-          ""
-        )}
+            <Mapview locations={this.state.locations} setMap={()=>{this.setState({ mappop: !this.state.mappop, filterpop: false })}} lat={this.state.lat} lng={this.state.lng}/>
+          </div>) : ("")}
         <div className="jobs">
-          {this.state.jobs.map((job) =>
-            job.km > this.state.kmFilter + 1 ? (
-              ""
-            ) : this.state.job.id !== job.id ? (
-              <div
-                className="jobs-card"
-                key={job.id}
+          {this.state.jobs.map((job) =>job.km > this.state.kmFilter + 1 ? ("") : this.state.job.id !== job.id ? (
+              <div className="jobs-card" key={job.id}
                 onClick={() => this.setState({viewport: {latitude: 31.952110800000003,longitude: 34.906551,width: "100%",height: "40vh",zoom: 10,}, job})}
               >
                 <div className="jobs-card-title">
@@ -418,44 +196,27 @@ export default class Search extends Component {
                 </div>
                 <div className="jobs-card-info">
                   <p>
-                    <span>
-                      <CalendarTodayIcon
-                        style={{ fontSize: 20, margin: "0", color: "gray" }}
-                      />
-                    </span>
-                    {job.dateCreated.toDate().toDateString()}
+                    <span><CalendarTodayIcon style={{ fontSize: 20, margin: "0", color: "gray" }}/>
+                    </span>{job.dateCreated.toDate().toDateString()}
                   </p>
                   <p>
-                    <span>
-                      <LocationOnIcon
-                        style={{ fontSize: 20, margin: "0", color: "gray" }}
-                      />
-                    </span>
-                    {Math.round(job.km)} km {this.getUserGeoName(job.id)}
+                    <span><LocationOnIcon style={{ fontSize: 20, margin: "0", color: "gray" }}/></span>
+                    {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
                   </p>
                 </div>
                 <div className="jobs-card-tags">
-                  {job.categories.map((tag) => (
-                    <p className="jobs-card-tags-item" key={tag}>
-                      {tag}
-                    </p>
-                  ))}
+                  {job.categories.map((tag) => (<p className="jobs-card-tags-item" key={tag}>{tag}</p>))}
                 </div>
               </div>
             ) : (
-              <div
-                className="jobs-selected-card"
-                key={job.id}
+              <div className="jobs-selected-card" key={job.id}
                 onClick={()=>this.setState({viewport: {latitude: 31.952110800000003,longitude: 34.906551,width: "100%",height: "40vh",zoom: 10,}, job})}
               >
-                <ReactMapGL
-                  {...job.viewport}
+                <ReactMapGL {...job.viewport}
                   mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
                   mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo" pitch="60" bearing="-60"
                 >
-                  <Marker offsetTop={-48} offsetLeft={-24} latitude={job.geo.Oa} longitude={job.geo.Ba}>
-                    <img src=" https://img.icons8.com/color/48/000000/marker.png" alt="img"/>
-                  </Marker>
+                  <Marker offsetTop={-48} offsetLeft={-24} latitude={job.geo.Oa} longitude={job.geo.Ba}><img src=" https://img.icons8.com/color/48/000000/marker.png" alt="img"/></Marker>
                 </ReactMapGL>
                 <div className="jobs-selected-card-body">
                   <div className="jobs-selected-card-body-left">
@@ -486,7 +247,7 @@ export default class Search extends Component {
                             }}
                           />
                         </span>
-                        {Math.round(job.km)} km {this.getUserGeoName(job.id)}
+                        {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
                       </p>
                     </div>
                     <div className="jobs-card-tags">
@@ -549,14 +310,14 @@ export default class Search extends Component {
                       </button>
                     </div>
                     <img
-                      src={this.getUserPic(job.creatingUserId)}
+                      src={getUserPic(job.creatingUserId , this.state.allUsers)}
                       alt="img"
                       className="jobs-selected-profile"
                     />
-                    <p>{this.getUserName(job.creatingUserId)}</p>
+                    <p>{getUserName(job.creatingUserId , this.state.allUsers)}</p>
                     <StarRatingComponent
                       starCount={5}
-                      value={this.getUserRate(job.creatingUserId , this.state.allUsers)}
+                      value={getUserRate(job.creatingUserId , this.state.allUsers)}
                     />
                   </div>
                 </div>

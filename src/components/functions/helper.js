@@ -21,7 +21,7 @@ export const GeoName = (lng, lat) => {
   return "location";
 };
 
-export const calcCrow = (lon2, lat2, unit , sLat , sLng) => {
+export const calcCrow = (lon2, lat2, sLat , sLng) => {
   var radlat1 = (Math.PI * sLat) / 180;
   var radlat2 = (Math.PI * lat2) / 180;
   var theta = sLng - lon2;
@@ -63,4 +63,45 @@ export const applyJob = (job) => {
   });
   toast.configure();
   toast.info("Job apllied", { autoClose: 2000 });
+};
+
+
+export const getUserName = (id , allUsers ) => {
+  const arr = allUsers;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].id === id) {
+      return arr[i].name;
+    }
+  }
+};
+
+
+export const getUserRate = (id , allUsers) => {
+  for (var i = 0; i < allUsers.length; i++) {
+    if (allUsers[i].id === id) {
+      return allUsers[i].employerRating;
+    }
+  }
+};
+
+export const getUserGeoName = (id , allLocations) => {
+  const arr = allLocations;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].id === id) {
+      if (arr[i].Geo === "") {
+        return "";
+      } else {
+        return ", " + arr[i].Geo;
+      }
+    }
+  }
+};
+
+export const getUserPic = (id , allUsers) => {
+  const arr = allUsers;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].id === id) {
+      return arr[i].profileImageURL;
+    }
+  }
 };
