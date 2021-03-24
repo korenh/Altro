@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { addNotification, GeoName , calcCrow  , applyJob} from "../../functions/helper";
+import { GeoName , calcCrow  , applyJob} from "../../functions/helper";
 import { toast } from "react-toastify";
 import "./Job.css";
 import Filter from "@material-ui/icons/FilterList";

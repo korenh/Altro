@@ -3,12 +3,7 @@ const UserContext = React.createContext();
 
 class UserProvider extends Component {
   state = {
-    user: {
-      uid: "",
-      name: " ",
-      profileImageURL: "",
-      description: "",
-    },
+    user: { uid: "",name: " ",profileImageURL: "",description: ""},
     lang: false,
     lat: "",
     lng: "",
@@ -19,16 +14,9 @@ class UserProvider extends Component {
   };
 
   setUser = (uid, name, profileImageURL, description) => {
-    const user = {
-      uid,
-      name,
-      profileImageURL,
-      description,
-    };
-    this.setState({ user });
+    const user = { uid, name, profileImageURL,description };
     navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({ lat: position.coords.latitude });
-      this.setState({ lng: position.coords.longitude });
+      this.setState({ lng: position.coords.longitude , lat: position.coords.latitude , user});
     });
   };
 
@@ -42,16 +30,7 @@ class UserProvider extends Component {
     const { setLang } = this;
 
     return (
-      <UserContext.Provider
-        value={{
-          user,
-          setUser,
-          setLang,
-          lang,
-          lat,
-          lng,
-        }}
-      >
+      <UserContext.Provider value={{user,setUser,setLang,lang,lat,lng,}}>
         {children}
       </UserContext.Provider>
     );

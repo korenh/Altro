@@ -1,5 +1,5 @@
-import "./Signup.css";
-import Altro from "./icons/altro.png";
+import "./Sign.css";
+import Altro from "./altro.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
@@ -74,7 +74,7 @@ export default class Signup extends Component {
     toast.configure();
     toast.warning("Upload...", {autoClose: 5000});
     uploadTask.on("state_changed",
-      (snapshot) => {let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100},
+      (snapshot) => {console.log((snapshot.bytesTransferred / snapshot.totalBytes) * 100)},
       (error) => {},
       () => {uploadTask.snapshot.ref.getDownloadURL().then((url) => { sessionStorage.setItem("imgurl", url)});
       }

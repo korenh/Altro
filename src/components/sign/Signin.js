@@ -1,5 +1,5 @@
-import "./Signin.css";
-import Altro from "./icons/altro.png";
+import "./Sign.css";
+import Altro from "./altro.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";

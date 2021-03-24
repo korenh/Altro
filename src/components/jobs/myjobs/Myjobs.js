@@ -21,7 +21,6 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Contact from "../publishmanage/components/contact/Contact";
 import StarRatingComponent from "react-star-rating-component";
 import UserContext from "../../protected/UserContext";
-import Loading from "../../functions/Loading";
 
 export default class Myjobs extends Component {
   static contextType = UserContext;
@@ -46,7 +45,6 @@ export default class Myjobs extends Component {
     allLocations: [],
     confirmedUsers: [],
     acceptedUsers: [],
-    online: true,
   };
 
   getCoord = () => {
@@ -192,7 +190,7 @@ export default class Myjobs extends Component {
             .then((data) => {
               const Geo = { Geo: data.locality, id: doc.id };
               allLocations.push(Geo);
-              this.setState({ allLocations, online: true });
+              this.setState({ allLocations });
             });
           firebase
             .firestore()
@@ -455,7 +453,6 @@ export default class Myjobs extends Component {
 
     return (
       <div>
-        {this.state.online ? "" : <Loading />}
         <div className="myjobs-main-head-flex">
           <p
             onClick={() => this.setSaved()}
