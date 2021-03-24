@@ -16,6 +16,7 @@ import firebase from "../../protected/Firebase";
 import ReactMapGL, { Marker } from "react-map-gl";
 import StarRatingComponent from "react-star-rating-component";
 import UserContext from "../../protected/UserContext";
+import config from '../../../config.json'
 
 export default class Search extends Component {
 
@@ -212,11 +213,8 @@ export default class Search extends Component {
               <div className="jobs-selected-card" key={job.id}
                 onClick={()=>this.setState({viewport: {latitude: 31.952110800000003,longitude: 34.906551,width: "100%",height: "40vh",zoom: 10,}, job})}
               >
-                <ReactMapGL {...job.viewport}
-                  mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
-                  mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo" pitch="60" bearing="-60"
-                >
-                  <Marker offsetTop={-48} offsetLeft={-24} latitude={job.geo.Oa} longitude={job.geo.Ba}><img src=" https://img.icons8.com/color/48/000000/marker.png" alt="img"/></Marker>
+                <ReactMapGL {...job.viewport} mapboxApiAccessToken={config.MAPBOX_TOKEN} mapStyle={config.MAPBOX_STYLE} pitch="60" bearing="-60">
+                  <Marker offsetTop={-48} offsetLeft={-24} latitude={job.geo.Oa} longitude={job.geo.Ba}><img src="https://img.icons8.com/color/48/000000/marker.png" alt="img"/></Marker>
                 </ReactMapGL>
                 <div className="jobs-selected-card-body">
                   <div className="jobs-selected-card-body-left">
