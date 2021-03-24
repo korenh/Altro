@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { addNotification, GeoName } from "../../functions/helper";
-import "react-toastify/dist/ReactToastify.css";
+import { addNotification, GeoName , calcCrow  , applyJob} from "../../functions/helper";
 import { toast } from "react-toastify";
 import "./Job.css";
 import Filter from "@material-ui/icons/FilterList";
@@ -17,19 +16,13 @@ import firebase from "../../protected/Firebase";
 import ReactMapGL, { Marker } from "react-map-gl";
 import StarRatingComponent from "react-star-rating-component";
 import UserContext from "../../protected/UserContext";
-import Loading from "../../functions/Loading";
 
 export default class Search extends Component {
+
   static contextType = UserContext;
 
   state = {
-    hours: [
-      { id: 1, name: "< 3hrs" },
-      { id: 2, name: "< 6hrs" },
-      { id: 3, name: "< 12hrs" },
-      { id: 4, name: "< 1d" },
-      { id: 5, name: "1d +" },
-    ],
+    hours: [{ id: 1, name: "< 3hrs" },{ id: 2, name: "< 6hrs" },{ id: 3, name: "< 12hrs" },{ id: 4, name: "< 1d" },{ id: 5, name: "1d +" }],
     Filter: [5, 15, 25, 50, 100],
     kmFilter: 10000,
     limit: 10,
@@ -49,39 +42,27 @@ export default class Search extends Component {
     requests: [],
     allUsers: [],
     allLocations: [],
-    online: false,
   };
+
+   componentDidMount() {
+    this.getData();
+  }
 
   loadMore = () => {
     this.setState({ limit: this.state.limit + 10 });
     this.getData();
   };
 
-  componentDidMount() {
-    this.getData();
-  }
-
-  getCoord = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({ lat: position.coords.latitude });
-      this.setState({ lng: position.coords.longitude });
-    });
-  };
-
   getData = (async) => {
-    this.getCoord();
+    navigator.geolocation.getCurrentPosition((position) => 
+      {this.setState({ lat: position.coords.latitude , lng: position.coords.longitude })
+    });
     const allData = [];
     const locations = [];
     const allUsers = [];
     const allLocations = [];
-    firebase
-      .firestore()
-      .collection("jobs")
-      .orderBy("startDate")
-      .where("startDate", ">=", this.state.dateValue)
-      .where("startDate", "<=", this.state.endDateValue)
-      .limit(this.state.limit)
-      .get()
+    firebase.firestore().collection("jobs").orderBy("startDate").where("startDate", ">=", this.state.dateValue)
+      .where("startDate", "<=", this.state.endDateValue).limit(this.state.limit).get()
       .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           const data = {
@@ -102,94 +83,35 @@ export default class Search extends Component {
             numberOfSaves: doc.data().numberOfSaves,
             numberOfViews: doc.data().numberOfViews,
             savedIds: doc.data().savedIds,
-            km: this.calcCrow(doc.data().location.Ba, doc.data().location.Oa),
+            km: calcCrow(doc.data().location.Ba, doc.data().location.Oa , this.state.lat , this.state.lng),
             Geoname: GeoName(doc.data().location.Ba, doc.data().location.Oa),
-            viewport: {
-              latitude: doc.data().location.Oa,
-              longitude: doc.data().location.Ba,
-              width: "100%",
-              height: "40vh",
-              zoom: 10,
-            },
+            viewport: {latitude: doc.data().location.Oa,longitude: doc.data().location.Ba,width: "100%",height: "40vh",zoom: 10,}
           };
-          fetch(
-            `https://api.bigdatacloud.net/data/reverse-geocode?latitude=${
-              doc.data().location.Oa
-            }&longitude=${
-              doc.data().location.Ba
-            }&localityLanguage=en&key=5305f546fbc84e378acc3138bdd5a82f`
+          fetch(`https://api.bigdatacloud.net/data/reverse-geocode?latitude=${doc.data().location.Oa}
+            &longitude=${doc.data().location.Ba}&localityLanguage=en&key=5305f546fbc84e378acc3138bdd5a82f`
           )
             .then((response) => response.json())
             .then((data) => {
-              const Geo = { Geo: data.locality, id: doc.id };
-              allLocations.push(Geo);
+              allLocations.push({ Geo: data.locality, id: doc.id });
               this.setState({ allLocations });
             });
-          firebase
-            .firestore()
-            .collection("users")
-            .doc(doc.data().creatingUserId)
-            .get()
-            .then((doc) => {
-              const data = {
-                name: doc.data().name,
-                profileImageURL: doc.data().profileImageURL,
-                id: doc.data().uid,
-                employerRating: doc.data().employerRating.sumOfRatings,
-              };
-              allUsers.push(data);
-              this.setState({ allUsers, online: true });
-            });
-          //-----method ends here-----//
-          allData.push(data);
-          locations.push(doc.data().location);
-        });
-        this.setState({ jobs: allData, locations });
+          firebase.firestore().collection("users").doc(doc.data().creatingUserId).get()
+          .then((doc) => {
+            const data = {
+              name: doc.data().name,
+              profileImageURL: doc.data().profileImageURL,
+              id: doc.data().uid,
+              employerRating: doc.data().employerRating.sumOfRatings,
+            };
+            allUsers.push(data);
+            this.setState({ allUsers});
+          });
+        allData.push(data);
+        locations.push(doc.data().location);
       });
-  };
-
-  jobPopUp = (job) => {
-    this.setState({ job });
-    this.setState({
-      viewport: {
-        latitude: 31.952110800000003,
-        longitude: 34.906551,
-        width: "100%",
-        height: "40vh",
-        zoom: 10,
-      },
+      this.setState({ jobs: allData, locations });
     });
-  };
-
-  applyJob = (job) => {
-    firebase
-      .firestore()
-      .collection("jobs")
-      .doc(job.id)
-      .get()
-      .then((doc) => {
-        let requests = doc.data().requests;
-        requests.push({
-          requestingUserId: sessionStorage.getItem("uid"),
-          dateRequested: firebase.firestore.Timestamp.fromDate(new Date()),
-        });
-        firebase
-          .firestore()
-          .collection("jobs")
-          .doc(job.id)
-          .update({ requests });
-      });
-    addNotification({
-      date: firebase.firestore.Timestamp.fromDate(new Date()),
-      fromUser: sessionStorage.getItem("uid"),
-      fromUsername: sessionStorage.getItem("name"),
-      jobId: job.id,
-      notificationType: "newRequest",
-      toUser: job.creatingUserId,
-    });
-    toast.configure();
-    toast.info("Job apllied", { autoClose: 2000 });
-  };
+};
 
   saveJob = (job) => {
     let docRef = firebase.firestore().collection("jobs").doc(job.id);
@@ -211,10 +133,6 @@ export default class Search extends Component {
     toast.info("Job saved", { autoClose: 2000 });
   };
 
-  setFilter = () => {
-    this.setState({ filterpop: !this.state.filterpop, mappop: false });
-  };
-
   handleSearch = () => {
     this.setState({ filterpop: !this.state.filterpop });
     setTimeout(() => {
@@ -225,20 +143,6 @@ export default class Search extends Component {
   setMap = () => {
     this.setState({ mappop: !this.state.mappop, filterpop: false });
   };
-
-  calcCrow(lon2, lat2, unit) {
-    var radlat1 = (Math.PI * this.state.lat) / 180;
-    var radlat2 = (Math.PI * lat2) / 180;
-    var theta = this.state.lng - lon2;
-    var radtheta = (Math.PI * theta) / 180;
-    var dist =
-      Math.sin(radlat1) * Math.sin(radlat2) +
-      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    dist = Math.acos(dist);
-    dist = (dist * 180) / Math.PI;
-    dist = dist * 60 * 1.1515;
-    return dist;
-  }
 
   dateFilterFunc = (v) => {
     this.setState({
@@ -269,11 +173,10 @@ export default class Search extends Component {
     }
   };
 
-  getUserRate = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        return arr[i].employerRating;
+  getUserRate = (id , allUsers) => {
+    for (var i = 0; i < allUsers.length; i++) {
+      if (allUsers[i].id === id) {
+        return allUsers[i].employerRating;
       }
     }
   };
@@ -296,11 +199,10 @@ export default class Search extends Component {
 
     return (
       <div style={{ textAlign: "center" }}>
-        {this.state.online ? "" : <Loading />}
         <div className="myjobs-main-head-flex">
           <p
             className="job-top-flex-p"
-            onClick={() => this.setFilter()}
+            onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })}
             style={{ color: "rgb(45, 123, 212)" }}
           >
             <Filter style={{ color: "rgb(45, 123, 212)", fontSize: 15 }}>
@@ -473,7 +375,7 @@ export default class Search extends Component {
             <div className="filter-card-flex2">
               <button
                 className="filter-card-cancel"
-                onClick={() => this.setFilter()}
+                onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })}
               >
                 {lang ? "ביטול" : "Cancel"}
               </button>
@@ -508,7 +410,7 @@ export default class Search extends Component {
               <div
                 className="jobs-card"
                 key={job.id}
-                onClick={() => this.jobPopUp(job)}
+                onClick={() => this.setState({viewport: {latitude: 31.952110800000003,longitude: 34.906551,width: "100%",height: "40vh",zoom: 10,}, job})}
               >
                 <div className="jobs-card-title">
                   <p className="jobs-card-description">{job.title}</p>
@@ -544,25 +446,15 @@ export default class Search extends Component {
               <div
                 className="jobs-selected-card"
                 key={job.id}
-                onClick={() => this.jobPopUp(job)}
+                onClick={()=>this.setState({viewport: {latitude: 31.952110800000003,longitude: 34.906551,width: "100%",height: "40vh",zoom: 10,}, job})}
               >
                 <ReactMapGL
                   {...job.viewport}
                   mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
-                  mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo"
-                  pitch="60"
-                  bearing="-60"
+                  mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo" pitch="60" bearing="-60"
                 >
-                  <Marker
-                    offsetTop={-48}
-                    offsetLeft={-24}
-                    latitude={job.geo.Oa}
-                    longitude={job.geo.Ba}
-                  >
-                    <img
-                      src=" https://img.icons8.com/color/48/000000/marker.png"
-                      alt="img"
-                    />
+                  <Marker offsetTop={-48} offsetLeft={-24} latitude={job.geo.Oa} longitude={job.geo.Ba}>
+                    <img src=" https://img.icons8.com/color/48/000000/marker.png" alt="img"/>
                   </Marker>
                 </ReactMapGL>
                 <div className="jobs-selected-card-body">
@@ -648,7 +540,7 @@ export default class Search extends Component {
                       <br />
                       <button
                         className="jobs-selected-apply-button"
-                        onClick={() => this.applyJob(job)}
+                        onClick={() => applyJob(job)}
                       >
                         <NearMeIcon
                           style={{ color: "white", fontSize: 14 }}
@@ -664,7 +556,7 @@ export default class Search extends Component {
                     <p>{this.getUserName(job.creatingUserId)}</p>
                     <StarRatingComponent
                       starCount={5}
-                      value={this.getUserRate(job.creatingUserId)}
+                      value={this.getUserRate(job.creatingUserId , this.state.allUsers)}
                     />
                   </div>
                 </div>

@@ -17,10 +17,3 @@ body {
   --main1: rgb(135, 186, 245);
   --main2: rgb(45, 123, 212);
 }
-
-.Particles {
-  position: fixed;
-  height: 100vh;
-  width: 100%;
-  opacity: 0.5;
-}

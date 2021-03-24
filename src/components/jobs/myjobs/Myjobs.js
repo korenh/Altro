@@ -46,7 +46,7 @@ export default class Myjobs extends Component {
     allLocations: [],
     confirmedUsers: [],
     acceptedUsers: [],
-    online: false,
+    online: true,
   };
 
   getCoord = () => {

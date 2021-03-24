@@ -74,7 +74,7 @@ export default class Jobs extends Component {
     indexCategories: [],
     allLocations: [],
     uploadType: true,
-    online: false,
+    online: true,
   };
 
   handleEnd = (date) => {
