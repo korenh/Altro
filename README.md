@@ -5,4 +5,4 @@ between temporary-job seekers and employers, business and \
 individual. Altro emphasizes volunteering and donating to the \
 society and the environment. 
 
-<img src="./sample/sample.png" width="500">
+<img src="./sample/example.png" width="500">
