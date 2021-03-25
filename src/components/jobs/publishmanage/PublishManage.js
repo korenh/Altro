@@ -657,7 +657,7 @@ export default class Jobs extends Component {
               />
               <br />
               <br />
-              <button onClick={() => this.Continue()} className="signup-button">
+              <button onClick={() => this.Continue()} className="sign-btn">
                 {lang ? "המשך" : "Continue"}
               </button>
             </div>
@@ -721,17 +721,17 @@ export default class Jobs extends Component {
                   onChange={(e) => this.setState({ agree: !this.state.agree })}
                 />
                 <span>{lang ? "אני מסכים לאלטרו" : "I agree to Altro's"} </span>
-                <Link to="/" className="signup-link">
+                <Link to="/" className="sign-link">
                   Terms of Services & Employment
                 </Link>
                 <br />
                 <span>and</span>
-                <Link to="/" className="signup-link ">
+                <Link to="/" className="sign-link ">
                   Privacy Policy
                 </Link>
               </div>
               <br />
-              <button onClick={() => this.addJob()} className="signup-button">
+              <button onClick={() => this.addJob()} className="sign-btn">
                 {lang ? "פרסום" : "Publish Job"}
               </button>
             </div>

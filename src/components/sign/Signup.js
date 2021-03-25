@@ -94,51 +94,36 @@ export default class Signup extends Component {
 
   render() {
     return (
-      <div className="signup">
+      <div style={{textAlign:'center'}}>
         <div className="signup-header">
           <img src={Altro} alt="img" style={{ height: "40px" }} />
         </div>
-        <form className="signup-form" onSubmit={this.handleRegister}>
-          <br />
+        <form className="sign-form" onSubmit={this.handleRegister}><br/>
           <p> I will be primarily using Altro as a</p>
-          <div className="signup-type-list">
+          <div className="sign-type-list">
           {this.state.asa.map((tag) => tag === this.state.asastate ? (
-              <span key={tag} className="signup-hours-list-item2" onClick={() =>this.setState({ isBusiness: true, asastate: tag })}>{tag}</span>
+              <span key={tag} className="sign-list-item2" onClick={() =>this.setState({ isBusiness: true, asastate: tag })}>{tag}</span>
               ) : (
-              <span key={tag} className="signup-hours-list-item" onClick={() =>this.setState({ isBusiness: false, asastate: tag })}>{tag}</span>
+              <span key={tag} className="sign-list-item" onClick={() =>this.setState({ isBusiness: false, asastate: tag })}>{tag}</span>
               )
           )}
-          </div>
-          <br /><br/>
-          <FilePond allowMultiple={false}allowReplace={false}
-            onaddfile={(err, file) => this.setState({file})} onremovefile={(err, file) => {}}
-          />
-          <br />
-          <p>Add profile picture(optional)</p>
-          <br />
-          <input className="signup-inp" placeholder="   Email" name="email"/>
-          <br />
-          <input className="signup-inp"placeholder="   Password" name="password"/>
-          <br />
-          <input className="signup-inp" placeholder="   Confirm Password" name="confirm"/>
-          <br />
-          <input className="signup-inp" placeholder="   Phone Number" name="phone"/>
-          <br />
-          <input className="signup-inp" placeholder="   Name/Business Name" type="text" name="name"/>
-          <br />
-          <p className="signup-inp" style={{ padding: "0" }}> <DatePicker selected={this.state.userDate} onChange={date => this.setState({userDate: date})} className="signup-inp2"/></p>
-          <textarea placeholder="   Write about your self/business" className="signup-inp" type="text" name="description"/>
-          <br />
-          <br /> <span>Already have an acoount?</span>
-          <Link to="/" className="signup-link">Sign in</Link>
-          <br />
-          <br />
+          </div><br/><br/>
+          <p>Profile picture(optional)</p>
+          <FilePond allowMultiple={false} allowReplace={false} onaddfile={(err, file) => this.setState({file})} onremovefile={(err, file) => {}}/>
+          <input className="sign-inp" placeholder="Email" name="email"/>
+          <input className="sign-inp"placeholder="Password" name="password"/>
+          <input className="sign-inp" placeholder="Confirm Password" name="confirm"/>
+          <input className="sign-inp" placeholder="Phone Number" name="phone"/>
+          <input className="sign-inp" placeholder="Name/Business Name" type="text" name="name"/>
+          <DatePicker style={{ width: '300px' }} selected={this.state.userDate} onChange={date => this.setState({userDate: date})} className="sign-inp"/>
+          <textarea placeholder="   Write about your self/business" className="sign-inp" type="text" name="description"/><br/><br/>
+          <span>Already have an acoount?</span>
+          <Link to="/" className="sign-link">Sign in</Link><br/><br/>
           <span>I agree to Altro's</span>
-          <Link to="/" className="signup-link">Terms of service</Link>
-          <br />
+          <Link to="/" className="sign-link">Terms of service</Link><br />
           <span>and</span>
-          <Link to="/" className="signup-link">Privacy Policy</Link>
-          <br /> <button className="signup-btn">Sign up</button>
+          <Link to="/" className="sign-link">Privacy Policy</Link><br/>
+          <button className="sign-btn">Sign up</button>
         </form>
       </div>
     );

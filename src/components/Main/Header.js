@@ -64,8 +64,7 @@ export default class Header extends Component {
                 <br />
                 <p style={{fontSize: "11px",color: "black",float: "right"}}>
                   <Switch color="primary" style={{ color: "rgb(45, 123, 212)" }} checked={this.state.toggle} onChange={() => this.toggleSwitch()}/>
-                  <br />
-                  English/עברית
+                  <br />English/עברית
                 </p>
               </div>
             </div>

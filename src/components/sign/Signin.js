@@ -54,25 +54,22 @@ export default class Signin extends Component {
 
   render() {
     return (
-      <div className="signin">
+      <div style={{textAlign:'center'}}>
         <div className="signin-header">
           <img src={Altro} alt="img" style={{ height: "40px" }} />
           <p>Single jobs for everyone , <br /> by everyone</p>
         </div>
         <div className="signin-body"></div>
-        <form className="login-form" onSubmit={this.handleLogin}>
-          <input type="mail" placeholder="Email" className="signin-inp" name="email" />
-          <br />
-          <input type="password" placeholder="Password" className="signin-inp" name="password" />
-          <br />
-          <button className="signin-btn">Sign in</button>
+        <form className="sign-form" onSubmit={this.handleLogin}>
+          <input type="mail" placeholder="Email" className="sign-inp" name="email" />
+          <input type="password" placeholder="Password" className="sign-inp" name="password" />
+          <button className="sign-btn">Sign in</button>
           <div className="signin-footer">
             <div className="signin-footer-top">
               <span>Dont have an acoount? </span>
-              <Link to="/signup" className="signin-link">Sign up</Link>
-              <br />
-              <span className="signin-or">or</span>
-              <a href="!#" className="signin-guest">Continue as a guest</a>
+              <Link to="/signup" className="sign-link">Sign up</Link>
+              <br /><span>or </span>
+              <a href="!#" className="sign-link">Continue as a guest</a>
             </div>
           </div>
         </form>

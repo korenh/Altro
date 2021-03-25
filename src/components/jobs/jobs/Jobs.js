@@ -223,113 +223,48 @@ export default class Search extends Component {
                       <h3>₪{job.payment}</h3>
                     </div>
                     <div className="jobs-card-info">
-                      <p>
-                        <span>
-                          <CalendarTodayIcon
-                            style={{
-                              fontSize: 20,
-                              margin: "0",
-                              color: "white",
-                            }}
-                          />
-                        </span>
-                        {job.dateCreated.toDate().toDateString()}
-                      </p>
-                      <p>
-                        <span>
-                          <LocationOnIcon
-                            style={{
-                              fontSize: 20,
-                              margin: "0",
-                              color: "white",
-                            }}
-                          />
-                        </span>
-                        {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
-                      </p>
+                      <p><span><CalendarTodayIcon style={{fontSize: 20,margin: "0",color: "white"}}/></span>{job.dateCreated.toDate().toDateString()}</p>
+                      <p><span><LocationOnIcon style={{fontSize: 20,margin: "0",color: "white"}}/></span>{Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}</p>
                     </div>
                     <div className="jobs-card-tags">
-                      {job.categories.map((tag) => (
-                        <p className="jobs-selected-card-tag-item" key={tag}>
-                          {tag}
-                        </p>
-                      ))}
+                      {job.categories.map((tag) => (<p className="jobs-selected-card-tag-item" key={tag}>{tag}</p>))}
                     </div>
                     <p className="jobs-selected-desc">{job.description}</p>
                     <div className="jobs-selected-flex">
                       <div>
-                        <QueryBuilderIcon
-                          className="jobs-selected-flex-img"
-                          style={{ fontSize: 40, color: "white" }}
-                        />
-                        <p>
-                          {
-                            this.state.hours.find((o) => o.id === job.duration)
-                              .name
-                          }
-                        </p>
+                        <QueryBuilderIcon className="jobs-selected-flex-img" style={{ fontSize: 40, color: "white" }}/>
+                        <p>{this.state.hours.find((o) => o.id === job.duration).name}</p>
                       </div>
                       <div>
-                        <AccessibilityNewIcon
-                          className="jobs-selected-flex-img"
-                          style={{ fontSize: 40, color: "white" }}
-                        />
+                        <AccessibilityNewIcon className="jobs-selected-flex-img"style={{ fontSize: 40, color: "white" }}/>
                         <p>{job.requiredEmployees}</p>
                       </div>
                       <div>
-                        <DirectionsCarIcon
-                          className="jobs-selected-flex-img"
-                          style={{ fontSize: 40, color: "white" }}
-                        />
+                        <DirectionsCarIcon className="jobs-selected-flex-img"style={{ fontSize: 40, color: "white" }}/>
                         <p>{job.isPayingForTransportation ? "✓" : "x"}</p>
                       </div>
                     </div>
                   </div>
                   <div className="jobs-selected-card-body-right">
                     <div className="jobs-selected-bottom-line">
-                      <button
-                        className="jobs-selected-save-button"
-                        onClick={() => this.saveJob(job)}
-                      >
-                        <StarIcon
-                          style={{ color: "rgb(45, 123, 212)", fontSize: 14 }}
-                        ></StarIcon>
-                        {lang ? "שמור" : "Save job"}
-                      </button>
-                      <br />
-                      <button
-                        className="jobs-selected-apply-button"
-                        onClick={() => applyJob(job)}
-                      >
-                        <NearMeIcon
-                          style={{ color: "white", fontSize: 14 }}
-                        ></NearMeIcon>
-                        {lang ? "הגש בקשה" : "Apply to job"}
+                      <button className="jobs-selected-save-button"onClick={() => this.saveJob(job)}>
+                        <StarIcon style={{ color: "rgb(45, 123, 212)", fontSize: 14 }}></StarIcon>{lang ? "שמור" : "Save job"}
+                      </button><br />
+                      <button className="jobs-selected-apply-button" onClick={() => applyJob(job)}>
+                        <NearMeIcon style={{ color: "white", fontSize: 14 }}></NearMeIcon>{lang ? "הגש בקשה" : "Apply to job"}
                       </button>
                     </div>
-                    <img
-                      src={getUserPic(job.creatingUserId , this.state.allUsers)}
-                      alt="img"
-                      className="jobs-selected-profile"
-                    />
+                    <img src={getUserPic(job.creatingUserId , this.state.allUsers)} alt="img" className="jobs-selected-profile"/>
                     <p>{getUserName(job.creatingUserId , this.state.allUsers)}</p>
-                    <StarRatingComponent
-                      starCount={5}
-                      value={getUserRate(job.creatingUserId , this.state.allUsers)}
-                    />
+                    <StarRatingComponent starCount={5} value={getUserRate(job.creatingUserId , this.state.allUsers)} />
                   </div>
                 </div>
               </div>
-            )
-          )}
+          ))}
         </div>
         {this.state.jobs.length > 9 ? (
-          <button onClick={() => this.loadMore()} className="jobs-load-more">
-            {lang ? "תוצאות נוספות" : "More results"}
-          </button>
-        ) : (
-          ""
-        )}
+          <button onClick={() => this.loadMore()} className="jobs-load-more">{lang ? "תוצאות נוספות" : "More results"}</button>
+        ) : ("")}
       </div>
     );
   }

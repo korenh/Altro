@@ -30,17 +30,14 @@ export default class Editprofile extends Component {
   render() {
     const { lang } = this.context;
     return (
-      <div className="edit-profile" style={lang ? { direction: "rtl" } : {}}>
+      <div className="edit-profile" style={lang ? { direction: "rtl"} : {}}><div style={{width:'300px' , margin:'auto'}}>
         <img src={this.state.profileImageURL}alt="img"className="profile-pic"/>
-        <input className="signin-inp"type="text"placeholder="Name"value={this.state.name}onChange={(e) => this.setState({ name: e.target.value })}/>
-        <br />
-        <input className="signin-inp" type="text" placeholder="Phone" value={this.state.phone} onChange={(e) => this.setState({ phone: e.target.value })}/>
-        <br />
-        <textarea className="signin-inp" type="text" placeholder="Description" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })}/>
-        <br />
-        <button className="signin-button" onClick={() => this.updateData()}>{lang ? "עדכון" : "Update"}</button>
-        <button className="signin-button" style={{ background: "red" }} onClick={() => this.props.editProfile()} >{lang ? "ביטול" : "Cancel"}</button>
-      </div>
+        <input className="sign-inp"type="text"placeholder="Name"value={this.state.name}onChange={(e) => this.setState({ name: e.target.value })}/>
+        <input className="sign-inp" type="text" placeholder="Phone" value={this.state.phone} onChange={(e) => this.setState({ phone: e.target.value })}/>
+        <textarea className="sign-inp" type="text" placeholder="Description" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })}/>
+        <button className="sign-btn" onClick={() => this.updateData()}>{lang ? "עדכון" : "Update"}</button>
+        <button className="sign-btn" style={{ background: "red" }} onClick={() => this.props.editProfile()} >{lang ? "ביטול" : "Cancel"}</button>
+      </div></div>
     );
   }
 }
