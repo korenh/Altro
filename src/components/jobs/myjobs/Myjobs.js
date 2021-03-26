@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../Jobs.css";
-import { addNotification, GeoName , calcCrow } from "../../functions/helper";
+import { addNotification, GeoName , calcCrow , getUserGeoName , removeOBJ } from "../../functions/helper";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
@@ -21,6 +21,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Contact from "../publishmanage/components/contact/Contact";
 import StarRatingComponent from "react-star-rating-component";
 import UserContext from "../../protected/UserContext";
+import config from '../../../config.json'
 
 export default class Myjobs extends Component {
   static contextType = UserContext;
@@ -68,22 +69,6 @@ export default class Myjobs extends Component {
     return arr;
   }
 
-  removeOBJuid2(arr, id) {
-    for (var i = 0; i < arr.length; i++)
-      if (arr[i].acceptingUserId === id) {
-        arr.splice(i, 1);
-        return arr;
-      }
-  }
-
-  removeOBJuid3(arr, id) {
-    for (var i = 0; i < arr.length; i++)
-      if (arr[i].confirmingUserId === id) {
-        arr.splice(i, 1);
-        return arr;
-      }
-  }
-
   setSaved = (async) => {
     setTimeout(() => {
       this.setState({ saved: true, going: false });
@@ -99,22 +84,11 @@ export default class Myjobs extends Component {
   };
 
   applyJob = (job) => {
-    firebase
-      .firestore()
-      .collection("jobs")
-      .doc(job.id)
-      .get()
+    firebase.firestore().collection("jobs").doc(job.id).get()
       .then((doc) => {
         let requests = doc.data().requests;
-        requests.push({
-          requestingUserId: sessionStorage.getItem("uid"),
-          dateRequested: firebase.firestore.Timestamp.fromDate(new Date()),
-        });
-        firebase
-          .firestore()
-          .collection("jobs")
-          .doc(job.id)
-          .update({ requests });
+        requests.push({requestingUserId: sessionStorage.getItem("uid"),dateRequested: firebase.firestore.Timestamp.fromDate(new Date())});
+        firebase.firestore().collection("jobs").doc(job.id).update({ requests });
       });
     addNotification({
       date: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -337,7 +311,7 @@ export default class Myjobs extends Component {
         let acceptedIds = doc.data().acceptedIds;
         let confirmedIds = doc.data().confirmedIds;
         this.removeA(acceptedIds, sessionStorage.getItem("uid"));
-        this.removeOBJuid2(acceptedUsers, sessionStorage.getItem("uid"));
+        removeOBJ(acceptedUsers, sessionStorage.getItem("uid") , "acceptingUserId" );
         confirmedIds.push(sessionStorage.getItem("uid"));
         confirmedUsers.push({
           confirmingUserId: sessionStorage.getItem("uid"),
@@ -374,7 +348,7 @@ export default class Myjobs extends Component {
         let confirmedUsers = doc.data().confirmedUsers;
         let confirmedIds = doc.data().confirmedIds;
         this.removeA(confirmedIds, sessionStorage.getItem("uid"));
-        this.removeOBJuid3(confirmedUsers, sessionStorage.getItem("uid"));
+        removeOBJ(confirmedUsers, sessionStorage.getItem("uid") , "confirmingUserId");
         firebase.firestore().collection("jobs").doc(job.id).update({
           confirmedIds,
           confirmedUsers,
@@ -392,46 +366,6 @@ export default class Myjobs extends Component {
           toUser: job.creatingUserId,
         });
       });
-  };
-
-  getUserName = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        return arr[i].name;
-      }
-    }
-  };
-
-  getUserPic = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        return arr[i].profileImageURL;
-      }
-    }
-  };
-
-  getUserRate = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        return arr[i].employerRating;
-      }
-    }
-  };
-
-  getUserGeoName = (id) => {
-    const arr = this.state.allLocations;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].id === id) {
-        if (arr[i].Geo === "") {
-          return "";
-        } else {
-          return ", " + arr[i].Geo;
-        }
-      }
-    }
   };
 
   render() {
@@ -475,48 +409,25 @@ export default class Myjobs extends Component {
                 <div className="dashboard-card">
                   <Chat job={this.state.jobdash} Chat={this.Chat} />
                 </div>
-              ) : (
-                ""
-                //--------------------------------------------------------------------------------//
-                //--------------------------------------------------------------------------------//
-                //--------------------------------------------------------------------------------//
-              )}
-
-              {this.state.jobs.map((job) =>
-                this.state.job.id !== job.id ? (
-                  <div
-                    className="jobs-card"
-                    key={job.id}
-                    onClick={() => this.jobPopUp(job)}
-                  >
+              ) : ("")}
+              {this.state.jobs.map((job) => this.state.job.id !== job.id ? (
+                  <div className="jobs-card" key={job.id} onClick={() => this.jobPopUp(job)}>
                     <div className="jobs-card-title">
                       <p className="jobs-card-description">{job.title}</p>
                       <h3>₪{job.payment}</h3>
                     </div>
                     <div className="jobs-card-info">
                       <p>
-                        <span>
-                          <CalendarTodayIcon
-                            style={{ fontSize: 20, margin: "0", color: "gray" }}
-                          />
-                        </span>
+                        <span><CalendarTodayIcon style={{ fontSize: 20, margin: "0", color: "gray" }}/></span>
                         {job.dateCreated.toDate().toDateString()}
                       </p>
                       <p>
-                        <span>
-                          <LocationOnIcon
-                            style={{ fontSize: 20, margin: "0", color: "gray" }}
-                          />
-                        </span>
-                        {Math.round(job.km)} km {this.getUserGeoName(job.id)}
+                        <span><LocationOnIcon style={{ fontSize: 20, margin: "0", color: "gray" }}/></span>
+                        {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
                       </p>
                     </div>
                     <div className="jobs-card-tags">
-                      {job.categories.map((tag) => (
-                        <p className="jobs-card-tags-item" key={tag}>
-                          {tag}
-                        </p>
-                      ))}
+                      {job.categories.map((tag) => (<p className="jobs-card-tags-item" key={tag}>{tag}</p>))}
                     </div>
                     <StarsIcon
                       style={{
@@ -529,23 +440,9 @@ export default class Myjobs extends Component {
                   </div>
                 ) : (
                   <div className="jobs-selected-card" key={job.description}>
-                    <ReactMapGL
-                      {...job.viewport}
-                      mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
-                      mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo"
-                      pitch="60"
-                      bearing="-60"
-                    >
-                      <Marker
-                        offsetTop={-48}
-                        offsetLeft={-24}
-                        latitude={32.12257459473794}
-                        longitude={34.8154874641065}
-                      >
-                        <img
-                          src=" https://img.icons8.com/color/48/000000/marker.png"
-                          alt="img"
-                        />
+                    <ReactMapGL {...job.viewport} mapboxApiAccessToken={config.MAPBOX_TOKEN} mapStyle={config.MAPBOX_STYLE} pitch="60" bearing="-60">
+                      <Marker offsetTop={-48} offsetLeft={-24} latitude={32.12257459473794} longitude={34.8154874641065}>
+                        <img src=" https://img.icons8.com/color/48/000000/marker.png" alt="img"/>
                       </Marker>
                     </ReactMapGL>
                     <div className="jobs-selected-card-body">
@@ -578,7 +475,7 @@ export default class Myjobs extends Component {
                               />
                             </span>
                             {Math.round(job.km)} km
-                            {this.getUserGeoName(job.id)}
+                            {getUserGeoName(job.id , this.state.allLocations)}
                           </p>
                         </div>
                         <div className="jobs-card-tags">
@@ -717,7 +614,7 @@ export default class Myjobs extends Component {
                             style={{ fontSize: 20, margin: "0", color: "gray" }}
                           />
                         </span>
-                        {Math.round(job.km)} km {this.getUserGeoName(job.id)}
+                        {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
                       </p>
                     </div>
                     <div className="jobs-card-tags">
@@ -779,7 +676,7 @@ export default class Myjobs extends Component {
                               />
                             </span>
                             {Math.round(job.km)} km
-                            {this.getUserGeoName(job.id)}
+                            {getUserGeoName(job.id , this.state.allLocations)}
                           </p>
                         </div>
                         <div className="jobs-card-tags">
@@ -896,52 +793,25 @@ export default class Myjobs extends Component {
               ""
             )}
             {
-              //--------------------------------------------------------------------------------//
-              //--------------------------------------------------------------------------------//
-              //--------------------------------------------------------------------------------//
               this.state.jobsConfirmed.map((job) =>
                 this.state.job.id !== job.id ? (
-                  <div
-                    className="jobs-card2"
-                    key={job.id}
-                    onClick={() => this.jobPopUp(job)}
-                  >
+                    <div className="jobs-card2" key={job.id} onClick={() => this.jobPopUp(job)}>
                     <div className="jobs-card-title">
                       <p className="jobs-card-description">{job.title}</p>
                       <h3>₪{job.payment}</h3>
                     </div>
                     <div className="jobs-card-info">
                       <p>
-                        <span>
-                          <CalendarTodayIcon
-                            style={{
-                              fontSize: 20,
-                              margin: "0",
-                              color: "white",
-                            }}
-                          />
-                        </span>
+                        <span><CalendarTodayIcon style={{fontSize: 20,margin: "0",color: "white"}}/></span>
                         {job.dateCreated.toDate().toDateString()}
                       </p>
                       <p>
-                        <span>
-                          <LocationOnIcon
-                            style={{
-                              fontSize: 20,
-                              margin: "0",
-                              color: "white",
-                            }}
-                          />
-                        </span>
-                        {Math.round(job.km)} km {this.getUserGeoName(job.id)}
+                        <span><LocationOnIcon style={{fontSize: 20,margin: "0",color: "white"}}/></span>
+                        {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
                       </p>
                     </div>
                     <div className="jobs-card-tags">
-                      {job.categories.map((tag) => (
-                        <p className="jobs-selected-card-tag-item" key={tag}>
-                          {tag}
-                        </p>
-                      ))}
+                      {job.categories.map((tag) => (<p className="jobs-selected-card-tag-item" key={tag}>{tag}</p>))}
                     </div>
                   </div>
                 ) : (
@@ -985,43 +855,18 @@ export default class Myjobs extends Component {
                             {job.dateCreated.toDate().toDateString()}
                           </p>
                           <p>
-                            <span>
-                              <LocationOnIcon
-                                style={{
-                                  fontSize: 20,
-                                  margin: "0",
-                                  color: "white",
-                                }}
-                              />
-                            </span>
-                            {Math.round(job.km)} km
-                            {this.getUserGeoName(job.id)}
+                            <span><LocationOnIcon style={{fontSize: 20,margin: "0",color: "white"}}/></span>
+                            {Math.round(job.km)} km {getUserGeoName(job.id , this.state.allLocations)}
                           </p>
                         </div>
                         <div className="jobs-card-tags">
-                          {job.categories.map((tag) => (
-                            <p
-                              className="jobs-selected-card-tag-item"
-                              key={tag}
-                            >
-                              {tag}
-                            </p>
-                          ))}
+                          {job.categories.map((tag) => (<p className="jobs-selected-card-tag-item" key={tag}>{tag}</p>))}
                         </div>
                         <p className="jobs-selected-desc">{job.description}</p>
                         <div className="jobs-selected-flex">
                           <div>
-                            <QueryBuilderIcon
-                              className="jobs-selected-flex-img"
-                              style={{ fontSize: 40, color: "white" }}
-                            />
-                            <p>
-                              {
-                                this.state.hours.find(
-                                  (o) => o.id === job.duration
-                                ).name
-                              }
-                            </p>
+                            <QueryBuilderIcon className="jobs-selected-flex-img" style={{ fontSize: 40, color: "white" }}/>
+                            <p>{this.state.hours.find((o) => o.id === job.duration).name}</p>
                           </div>
                           <div>
                             <AccessibilityNewIcon

@@ -105,3 +105,11 @@ export const getUserPic = (id , allUsers) => {
     }
   }
 };
+
+export const removeOBJ = (arr, id , field) => {
+  for (var i = 0; i < arr.length; i++)
+    if (arr[i].field === id) {
+      arr.splice(i, 1);
+      return arr;
+    }
+}
