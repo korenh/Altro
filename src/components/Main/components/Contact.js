@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "../../functions/Firebase";
+import firebase from "../../Functions/Firebase";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 export default class Contact extends Component {

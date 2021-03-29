@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "../../functions/Firebase";
+import firebase from "../../Functions/Firebase";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 export default class Editjob extends Component {

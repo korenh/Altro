@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import "./Chat.css";
-import firebase from "../../../functions/Firebase";
+import firebase from "../../Functions/Firebase";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import InfoIcon from "@material-ui/icons/Info";
 import SendIcon from "@material-ui/icons/Send";

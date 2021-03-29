@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import "./Main.css";
-import Altro from "../sign/altro.png";
+import Altro from "../Sign/altro.png";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import MenuIcon from "@material-ui/icons/Menu";
 import Switch from "@material-ui/core/Switch";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 
 export default class Header extends Component {
   static contextType = UserContext;

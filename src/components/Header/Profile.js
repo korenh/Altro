@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import firebase from "../functions/Firebase";
+import firebase from "../Functions/Firebase";
 import EditIcon from "@material-ui/icons/Edit";
 import StarRatingComponent from "react-star-rating-component";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 import Editprofile from "./Editprofile";
 
 export default class Profile extends Component {

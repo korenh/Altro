@@ -1,12 +1,11 @@
-import "./Sign.css";
 import Altro from "./altro.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
-import firebase from "../functions/Firebase";
+import firebase from "../Functions/Firebase";
 import "react-toastify/dist/ReactToastify.css";
-import { storage } from "../functions/Firebase";
+import { storage } from "../Functions/Firebase";
 import "react-datepicker/dist/react-datepicker.css";
 import config from '../../config.json';
 import { FilePond, registerPlugin } from "react-filepond";

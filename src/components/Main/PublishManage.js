@@ -5,18 +5,18 @@ import { toast } from "react-toastify";
 import Mapselect from "./components/Mapselect"
 import ArchiveIcon from "@material-ui/icons/Archive";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { addNotification } from "../functions/helper";
+import { addNotification } from "../Functions/helper";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ChatIcon from "@material-ui/icons/Chat";
 import DeleteIcon from "@material-ui/icons/Delete";
 import GroupIcon from "@material-ui/icons/Group";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import EditIcon from "@material-ui/icons/Edit";
-import Dashboard from "./components/dashboard/Dashboard";
-import Chat from "./components/chat/Chat";
-import Review from "./components/review/Review";
+import Dashboard from "./components/Dashboard";
+import Chat from "./components/Chat";
+import Review from "./components/Review";
 import Editjob from "./components/Editjob";
-import firebase from "../functions/Firebase";
+import firebase from "../Functions/Firebase";
 import { Link } from "react-router-dom";
 import ReactMapGL, { Marker } from "react-map-gl";
 import DatePicker from "react-datepicker";
@@ -30,7 +30,7 @@ import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import StarRatingComponent from "react-star-rating-component";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 
 export default class Jobs extends Component {
   static contextType = UserContext;

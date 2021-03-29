@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import "./Review.css";
-import firebase from "../../../functions/Firebase";
+import firebase from "../../Functions/Firebase";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import StarRatingComponent from "react-star-rating-component";
 

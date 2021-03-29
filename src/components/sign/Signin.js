@@ -1,11 +1,10 @@
-import "./Sign.css";
 import Altro from "./altro.png";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
-import firebase from "../functions/Firebase";
+import firebase from "../Functions/Firebase";
 import "react-toastify/dist/ReactToastify.css";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 
 export default class Signin extends Component {
   

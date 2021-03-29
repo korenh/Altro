@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import "./Main.css";
 import SearchIcon from "@material-ui/icons/Search";
 import PublishIcon from "@material-ui/icons/Publish";
 import StarIcon from "@material-ui/icons/Star";
 import { NavLink } from "react-router-dom";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 
 export default class Nav extends Component {
   static contextType = UserContext;

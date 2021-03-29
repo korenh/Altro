@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { addNotification, GeoName , calcCrow , getUserGeoName , removeOBJ } from "../functions/helper";
+import { addNotification, GeoName , calcCrow , getUserGeoName , removeOBJ } from "../Functions/helper";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
@@ -11,15 +11,15 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import BackspaceIcon from "@material-ui/icons/Backspace";
 import StarIcon from "@material-ui/icons/Star";
 import NearMeIcon from "@material-ui/icons/NearMe";
-import firebase from "../functions/Firebase";
-import Chat from "./components/chat/Chat";
+import firebase from "../Functions/Firebase";
+import Chat from "./components/Chat";
 import ReactMapGL, { Marker } from "react-map-gl";
 import StarsIcon from "@material-ui/icons/Stars";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Contact from "./components/Contact";
 import StarRatingComponent from "react-star-rating-component";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 import config from '../../config.json'
 
 export default class Myjobs extends Component {

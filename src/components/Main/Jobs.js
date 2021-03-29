@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GeoName , calcCrow  , applyJob , getUserName , getUserRate , getUserGeoName , getUserPic} from "../functions/helper";
+import { GeoName , calcCrow  , applyJob , getUserName , getUserRate , getUserGeoName , getUserPic} from "../Functions/helper";
 import { toast } from "react-toastify";
 import Filter from "@material-ui/icons/FilterList";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
@@ -11,12 +11,11 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import NearMeIcon from "@material-ui/icons/NearMe";
 import Mapview from "../Header/Mapview";
-import firebase from "../functions/Firebase";
+import firebase from "../Functions/Firebase";
 import ReactMapGL, { Marker } from "react-map-gl";
 import StarRatingComponent from "react-star-rating-component";
-import UserContext from "../functions/UserContext";
+import UserContext from "../Functions/UserContext";
 import config from '../../config.json'
-import "./Jobs.css"
 
 export default class Search extends Component {
 
