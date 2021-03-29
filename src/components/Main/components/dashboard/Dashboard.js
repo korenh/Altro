@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./Dashboard.css";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Manageusers from "../manageusers/Manageusers";
-import UserContext from "../../../../protected/UserContext";
+import UserContext from "../../../functions/UserContext";
 
 export default class Dashboard extends Component {
   static contextType = UserContext;

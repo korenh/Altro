@@ -6,7 +6,7 @@ import Profile from "./Profile";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import MenuIcon from "@material-ui/icons/Menu";
 import Switch from "@material-ui/core/Switch";
-import UserContext from "../protected/UserContext";
+import UserContext from "../functions/UserContext";
 
 export default class Header extends Component {
   static contextType = UserContext;

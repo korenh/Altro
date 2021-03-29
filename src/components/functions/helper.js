@@ -1,4 +1,4 @@
-import firebase from "../protected/Firebase";
+import firebase from "./Firebase";
 import { toast } from "react-toastify";
 
 export const addNotification = (notification) => {

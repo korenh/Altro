@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import "../Jobs.css";
-import { addNotification, GeoName , calcCrow , getUserGeoName , removeOBJ } from "../../functions/helper";
+import { addNotification, GeoName , calcCrow , getUserGeoName , removeOBJ } from "../functions/helper";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
@@ -12,16 +11,16 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import BackspaceIcon from "@material-ui/icons/Backspace";
 import StarIcon from "@material-ui/icons/Star";
 import NearMeIcon from "@material-ui/icons/NearMe";
-import firebase from "../../protected/Firebase";
-import Chat from "../publishmanage/components/chat/Chat";
+import firebase from "../functions/Firebase";
+import Chat from "./components/chat/Chat";
 import ReactMapGL, { Marker } from "react-map-gl";
 import StarsIcon from "@material-ui/icons/Stars";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import Contact from "../publishmanage/components/contact/Contact";
+import Contact from "./components/Contact";
 import StarRatingComponent from "react-star-rating-component";
-import UserContext from "../../protected/UserContext";
-import config from '../../../config.json'
+import UserContext from "../functions/UserContext";
+import config from '../../config.json'
 
 export default class Myjobs extends Component {
   static contextType = UserContext;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import firebase from "../../../../protected/Firebase";
-import { addNotification } from "../../../../functions/helper";
+import firebase from "../../../functions/Firebase";
+import { addNotification } from "../../../functions/helper";
 import "./Manageusers.css";
 
 export default class Manageusers extends Component {

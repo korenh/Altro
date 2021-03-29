@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import UserContext from "../protected/UserContext";
-import firebase from "../protected/Firebase";
+import UserContext from "../functions/UserContext";
+import firebase from "../functions/Firebase";
 import { toast } from "react-toastify";
 
 export default class Editprofile extends Component {

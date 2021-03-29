@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { GeoName , calcCrow  , applyJob , getUserName , getUserRate , getUserGeoName , getUserPic} from "../../functions/helper";
+import { GeoName , calcCrow  , applyJob , getUserName , getUserRate , getUserGeoName , getUserPic} from "../functions/helper";
 import { toast } from "react-toastify";
-import "./Job.css";
 import Filter from "@material-ui/icons/FilterList";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
@@ -11,12 +10,13 @@ import StarIcon from "@material-ui/icons/Star";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import NearMeIcon from "@material-ui/icons/NearMe";
-import Mapview from "../map/Mapview";
-import firebase from "../../protected/Firebase";
+import Mapview from "../Header/Mapview";
+import firebase from "../functions/Firebase";
 import ReactMapGL, { Marker } from "react-map-gl";
 import StarRatingComponent from "react-star-rating-component";
-import UserContext from "../../protected/UserContext";
-import config from '../../../config.json'
+import UserContext from "../functions/UserContext";
+import config from '../../config.json'
+import "./Jobs.css"
 
 export default class Search extends Component {
 
@@ -31,7 +31,6 @@ export default class Search extends Component {
     job: {},
     filterpop: false,
     mappop: false,
-    acceptedIds: [],
     lat: undefined,
     lng: undefined,
     savedIds: [],
@@ -40,7 +39,6 @@ export default class Search extends Component {
     dateValue: new Date(new Date().setDate(new Date().getDate() - 1)),
     endDateValue: new Date("05 October 2024 14:48 UTC"),
     locations: [],
-    requests: [],
     allUsers: [],
     allLocations: [],
   };
@@ -48,11 +46,6 @@ export default class Search extends Component {
    componentDidMount() {
     this.getData();
   }
-
-  loadMore = () => {
-    this.setState({ limit: this.state.limit + 10 });
-    this.getData();
-  };
 
   getData = (async) => {
     navigator.geolocation.getCurrentPosition((position) => 
@@ -128,11 +121,6 @@ export default class Search extends Component {
     toast.info("Job saved", { autoClose: 2000 });
   };
 
-  handleSearch = () => {
-    this.setState({ filterpop: !this.state.filterpop });
-    setTimeout(() => {this.getData()}, 1);
-  };
-
   render() {
     const { lang } = this.context;
 
@@ -179,7 +167,7 @@ export default class Search extends Component {
             </div>
             <div className="filter-card-flex2">
               <button className="filter-card-cancel" onClick={() => this.setState({ filterpop: !this.state.filterpop, mappop: false })}>{lang ? "ביטול" : "Cancel"}</button>
-              <button className="filter-card-search" onClick={() => this.handleSearch()}>{lang ? "חיפוש" : "Search"}</button>
+              <button className="filter-card-search" onClick={() => {this.setState({ filterpop: !this.state.filterpop });setTimeout(() => {this.getData()}, 1)}}>{lang ? "חיפוש" : "Search"}</button>
             </div>
           </div>) : ("")}
         {this.state.mappop ? (
@@ -263,8 +251,7 @@ export default class Search extends Component {
           ))}
         </div>
         {this.state.jobs.length > 9 ? (
-          <button onClick={() => this.loadMore()} className="jobs-load-more">{lang ? "תוצאות נוספות" : "More results"}</button>
-        ) : ("")}
+          <button onClick={() =>{this.setState({ limit: this.state.limit + 10 }); this.getData()}} className="jobs-load-more">{lang ? "תוצאות נוספות" : "More results"}</button>) : ("")}
       </div>
     );
   }

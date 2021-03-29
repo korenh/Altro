@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "../../../../../protected/Firebase";
+import firebase from "../../../functions/Firebase";
 
 export default class ChatInfo extends Component {
   state = {

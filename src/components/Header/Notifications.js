@@ -6,7 +6,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import StarsIcon from "@material-ui/icons/Stars";
 import ErrorIcon from "@material-ui/icons/Error";
 import HelpIcon from "@material-ui/icons/Help";
-import Review2 from "./components/review/Review2";
+import Review2 from "../Main/components/review/Review2";
 import UserContext from "../functions/UserContext";
 
 export default class Notifications extends Component {

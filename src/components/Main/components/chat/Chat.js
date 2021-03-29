@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import "./Chat.css";
-import firebase from "../../../../protected/Firebase";
+import firebase from "../../../functions/Firebase";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import InfoIcon from "@material-ui/icons/Info";
 import SendIcon from "@material-ui/icons/Send";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
-import ChatInfo from "./components/ChatInfo";
+import ChatInfo from "./ChatInfo";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import axios from "axios";
