@@ -8,6 +8,7 @@ import ChatInfo from "./ChatInfo";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+import {getUserName , getUserPic} from '../../Functions/helper'
 
 export default class Chat extends Component {
   state = {
@@ -88,98 +89,41 @@ export default class Chat extends Component {
       });
   };
 
-  getUserName = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].uid === id) {
-        console.log(arr[i].name);
-        return arr[i].name;
-      }
-    }
-  };
-
-  getUserPic = (id) => {
-    const arr = this.state.allUsers;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].uid === id) {
-        console.log(arr[i].name);
-        return arr[i].profileImageURL;
-      }
-    }
-  };
-
   render() {
     return (
       <div className="chat-main">
-        {this.state.ChatInfo ? (
-          <ChatInfo
-            allUsers={this.state.allUsers}
-            id={this.props.job.creatingUserId}
-            jobInfo={this.jobInfo}
-          />
-        ) : (
-          ""
-        )}
+        {this.state.ChatInfo ? ( <ChatInfo allUsers={this.state.allUsers}id={this.props.job.creatingUserId}jobInfo={this.jobInfo}/>) : ("")}
         <div className="chat-top">
-          <ExitToAppIcon
-            onClick={() => this.props.Chat()}
-            alt="img"
-            className="chat-top-logout"
-            style={{ color: "white", fontSize: 25 }}
-          />
+          <ExitToAppIcon onClick={() => this.props.Chat()}alt="img"className="chat-top-logout"style={{ color: "white", fontSize: 25 }}/>
           <p className="chat-top-title">{this.props.job.title}</p>
-          <InfoIcon
-            onClick={() => this.jobInfo()}
-            alt="img"
-            className="chat-top-logout"
-            style={{ color: "white", fontSize: 25 }}
-          />
+          <InfoIcon onClick={() => this.jobInfo()}alt="img"className="chat-top-logout"style={{ color: "white", fontSize: 25 }}/>
         </div>
         <div className="chat-section">
           <p>Confirmed their participation</p>
           <span>listofpics</span>
-          <button className="chat-confirmed">
-            <VerifiedUserIcon style={{ color: "white", fontSize: 15 }} />
-            Confirm Participation
-          </button>
+          <button className="chat-confirmed"><VerifiedUserIcon style={{ color: "white", fontSize: 15 }} />Confirm Participation</button>
         </div>
         <div className="chat-content">
           {this.state.messages.reverse().map((message) =>
             message.from === sessionStorage.getItem("uid") ? (
               <div key={message.dateSent} className="chat-each-message">
                 <div className="chat-each-flex">
-                  <img
-                    src={sessionStorage.getItem("url")}
-                    alt="img"
-                    className="chat-each-profile"
-                  />
+                  <img src={sessionStorage.getItem("url")}alt="img"className="chat-each-profile"/>
                   <div>
                     <p>{sessionStorage.getItem("name")}</p>
                     <p>{message.message}</p>
-                    <p className="chat-each-date">
-                      {new Date(message.dateSent).toLocaleDateString() +
-                        "|" +
-                        new Date(message.dateSent).toLocaleTimeString()}
-                    </p>
+                    <p className="chat-each-date">{new Date(message.dateSent).toLocaleDateString() +"|" +new Date(message.dateSent).toLocaleTimeString()}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div key={message.dateSent} className="chat-each-message2">
                 <div className="chat-each-flex">
-                  <img
-                    src={this.getUserPic(message.from)}
-                    alt="img"
-                    className="chat-each-profile"
-                  />
+                  <img src={getUserPic(message.from , this.state.allUsers)}alt="img"className="chat-each-profile"/>
                   <div>
-                    <p>{this.getUserName(message.from)}</p>
+                    <p>{getUserName(message.from , this.state.allUsers)}</p>
                     <p>{message.message}</p>
-                    <p className="chat-each-date">
-                      {new Date(message.dateSent).toLocaleDateString() +
-                        "|" +
-                        new Date(message.dateSent).toLocaleTimeString()}
-                    </p>
+                    <p className="chat-each-date">{new Date(message.dateSent).toLocaleDateString() +"|" +new Date(message.dateSent).toLocaleTimeString()}</p>
                   </div>
                 </div>
               </div>
@@ -187,15 +131,9 @@ export default class Chat extends Component {
           )}
         </div>
         <div className="chat-div-form">
-          <form
-            className="chat-form"
-            onSubmit={this.AddData}
-            ref={(el) => (this.myFormRef = el)}
-          >
+          <form className="chat-form"onSubmit={this.AddData}ref={(el) => (this.myFormRef = el)}>
             <input type="text" name="message" />
-            <button type="submit">
-              <SendIcon style={{ color: "white", fontSize: 25 }} />
-            </button>
+            <button type="submit"><SendIcon style={{ color: "white", fontSize: 25 }} /></button>
           </form>
         </div>
       </div>

@@ -31,6 +31,7 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import StarRatingComponent from "react-star-rating-component";
 import UserContext from "../Functions/UserContext";
+import config from '../../config.json'
 
 export default class Jobs extends Component {
   static contextType = UserContext;
@@ -823,12 +824,7 @@ export default class Jobs extends Component {
                 key={job.description}
                 onClick={() => this.jobPopUp(job)}
               >
-                <ReactMapGL
-                  {...job.viewport}
-                  // center={[32.958984, -5.353521]}
-                  // fitBounds={[[32.958984, -5.353521], [43.50585, 5.615985]]}}
-                  mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
-                  mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo"
+                <ReactMapGL {...job.viewport} mapboxApiAccessToken={config.MAPBOX_TOKEN}mapStyle={config.MAPBOX_STYLE}
                   pitch="60"
                   bearing="-60"
                 >

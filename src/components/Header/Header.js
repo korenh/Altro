@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Altro from "../Sign/altro.png";
+import Altro from "../Auth/altro.png";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
@@ -11,7 +11,6 @@ export default class Header extends Component {
   static contextType = UserContext;
 
   state = {
-    popup: false,
     notification: false,
     profile: false,
     menu: false,

@@ -75,13 +75,6 @@ export default class Myjobs extends Component {
     }, 1);
   };
 
-  setGoing = (async) => {
-    setTimeout(() => {
-      this.setState({ saved: false, going: true });
-      this.getData();
-    }, 1);
-  };
-
   applyJob = (job) => {
     firebase.firestore().collection("jobs").doc(job.id).get()
       .then((doc) => {
@@ -283,27 +276,17 @@ export default class Myjobs extends Component {
   };
 
   unsaveJob = (job) => {
-    firebase
-      .firestore()
-      .collection("jobs")
-      .doc(job.id)
-      .get()
+    firebase.firestore().collection("jobs").doc(job.id).get()
       .then((doc) => {
         let savedIds = doc.data().savedIds;
         this.removeA(savedIds, sessionStorage.getItem("uid"));
-        firebase.firestore().collection("jobs").doc(job.id).update({
-          savedIds,
-        });
+        firebase.firestore().collection("jobs").doc(job.id).update({savedIds});
       });
     this.getData();
   };
 
   toconfirmedUsers = (job) => {
-    firebase
-      .firestore()
-      .collection("jobs")
-      .doc(job.id)
-      .get()
+    firebase.firestore().collection("jobs").doc(job.id).get()
       .then((doc) => {
         let acceptedUsers = doc.data().acceptedUsers;
         let confirmedUsers = doc.data().confirmedUsers;
@@ -373,42 +356,17 @@ export default class Myjobs extends Component {
     return (
       <div>
         <div className="myjobs-main-head-flex">
-          <p
-            onClick={() => this.setSaved()}
-            style={{
-              background: this.state.saved ? "rgb(45, 123, 212)" : "none",
-              color: this.state.saved ? "white" : "gray",
-            }}
-          >
-            <StarIcon style={{ color: "white", fontSize: 15 }} />
-
-            {lang ? "שמור" : "Saved"}
-          </p>
-          <p
-            onClick={() => this.setGoing()}
-            style={{
-              background: this.state.going ? "rgb(45, 123, 212)" : "none",
-              color: this.state.going ? "white" : "gray",
-            }}
-          >
-            <NearMeIcon style={{ color: "white", fontSize: 15 }} />
-
-            {lang ? "מאושר" : "Going"}
-          </p>
+          <p onClick={() => this.setSaved()} style={{background: this.state.saved ? "rgb(45, 123, 212)" : "none",color: this.state.saved ? "white" : "gray"}} >
+            <StarIcon style={{ color: "white", fontSize: 15 }} />{lang ? "שמור" : "Saved"}</p>
+          <p onClick={() => setTimeout(() => {this.setState({ saved: false, going: true });this.getData()}, 1)}
+            style={{background: this.state.going ? "rgb(45, 123, 212)" : "none",color: this.state.going ? "white" : "gray"}}>
+            <NearMeIcon style={{ color: "white", fontSize: 15 }} />{lang ? "מאושר" : "Going"}</p>
         </div>
-        {this.state.ContactPopup ? (
-          <Contact job={this.state.jobdash} ContactPopup={this.ContactPopup} />
-        ) : (
-          ""
-        )}
+        {this.state.ContactPopup ? (<Contact job={this.state.jobdash} ContactPopup={this.ContactPopup} />) : ("")}
         {this.state.saved ? (
           <div>
             <div className="myjobs">
-              {this.state.jobChat ? (
-                <div className="dashboard-card">
-                  <Chat job={this.state.jobdash} Chat={this.Chat} />
-                </div>
-              ) : ("")}
+              {this.state.jobChat ? (<div className="dashboard-card"><Chat job={this.state.jobdash} Chat={this.Chat} /></div>) : ("")}
               {this.state.jobs.map((job) => this.state.job.id !== job.id ? (
                   <div className="jobs-card" key={job.id} onClick={() => this.jobPopUp(job)}>
                     <div className="jobs-card-title">
@@ -428,14 +386,7 @@ export default class Myjobs extends Component {
                     <div className="jobs-card-tags">
                       {job.categories.map((tag) => (<p className="jobs-card-tags-item" key={tag}>{tag}</p>))}
                     </div>
-                    <StarsIcon
-                      style={{
-                        color: "rgb(45, 123, 212)",
-                        fontSize: 30,
-                        float: "right",
-                        margin: "5px",
-                      }}
-                    />
+                    <StarsIcon style={{color: "rgb(45, 123, 212)",fontSize: 30,float: "right",margin: "5px"}}/>
                   </div>
                 ) : (
                   <div className="jobs-selected-card" key={job.description}>
@@ -452,68 +403,29 @@ export default class Myjobs extends Component {
                         </div>
                         <div className="jobs-card-info">
                           <p>
-                            <span>
-                              <CalendarTodayIcon
-                                style={{
-                                  fontSize: 20,
-                                  margin: "0",
-                                  color: "white",
-                                }}
-                              />
-                            </span>
+                            <span><CalendarTodayIcon style={{fontSize: 20,margin: "0",color: "white",}}/></span>
                             {job.dateCreated.toDate().toDateString()}
                           </p>
                           <p>
-                            <span>
-                              <LocationOnIcon
-                                style={{
-                                  fontSize: 20,
-                                  margin: "0",
-                                  color: "white",
-                                }}
-                              />
-                            </span>
-                            {Math.round(job.km)} km
-                            {getUserGeoName(job.id , this.state.allLocations)}
+                            <span><LocationOnIcon style={{fontSize: 20,margin: "0",color: "white",}}/></span>
+                            {Math.round(job.km)} km  {getUserGeoName(job.id , this.state.allLocations)}
                           </p>
                         </div>
                         <div className="jobs-card-tags">
-                          {job.categories.map((tag) => (
-                            <p
-                              className="jobs-selected-card-tag-item"
-                              key={tag}
-                            >
-                              {tag}
-                            </p>
-                          ))}
+                          {job.categories.map((tag) => (<p className="jobs-selected-card-tag-item" key={tag}>{tag}</p>))}
                         </div>
                         <p className="jobs-selected-desc">{job.description}</p>
                         <div className="jobs-selected-flex">
                           <div>
-                            <QueryBuilderIcon
-                              className="jobs-selected-flex-img"
-                              style={{ fontSize: 40, color: "white" }}
-                            />
-                            <p>
-                              {
-                                this.state.hours.find(
-                                  (o) => o.id === job.duration
-                                ).name
-                              }
-                            </p>
+                            <QueryBuilderIcon className="jobs-selected-flex-img"style={{ fontSize: 40, color: "white" }}/>
+                            <p>{this.state.hours.find((o) => o.id === job.duration).name}</p>
                           </div>
                           <div>
-                            <AccessibilityNewIcon
-                              className="jobs-selected-flex-img"
-                              style={{ fontSize: 40, color: "white" }}
-                            />
+                            <AccessibilityNewIcon className="jobs-selected-flex-img" style={{ fontSize: 40, color: "white" }}/>
                             <p>{job.requiredEmployees}</p>
                           </div>
                           <div>
-                            <DirectionsCarIcon
-                              className="jobs-selected-flex-img"
-                              style={{ fontSize: 40, color: "white" }}
-                            />
+                            <DirectionsCarIcon className="jobs-selected-flex-img"style={{ fontSize: 40, color: "white" }}/>
                             <p>{job.isPayingForTransportation ? "✓" : "x"}</p>
                           </div>
                         </div>
@@ -521,19 +433,9 @@ export default class Myjobs extends Component {
                       <div className="jobs-selected-card-body-right">
                         <div className="jobs-selected-bottom-line">
                           <br />
-                          <button
-                            className="jobs-selected-save-button"
-                            onClick={() => this.ContactPopup(job)}
-                          >
-                            <PhoneIphoneIcon
-                              style={{
-                                fontSize: 15,
-                                color: "rgb(45, 123, 212)",
-                              }}
-                            />
-                            Contact
-                          </button>
-                          <br />
+                          <button className="jobs-selected-save-button" onClick={() => this.ContactPopup(job)}>
+                            <PhoneIphoneIcon style={{ fontSize: 15, color: "rgb(45, 123, 212)"}}/>Contact
+                          </button><br />
                           <button
                             className="jobs-selected-finish-button"
                             onClick={() => this.applyJob(job)}
@@ -575,9 +477,6 @@ export default class Myjobs extends Component {
             </div>
           </div>
         ) : (
-          //--------------------------------------------------------------------------------//
-          //--------------------------------------------------------------------------------//
-          //--------------------------------------------------------------------------------//
           <div>
             <div className="myjobs">
               {this.state.jobChat ? (
@@ -617,32 +516,16 @@ export default class Myjobs extends Component {
                       </p>
                     </div>
                     <div className="jobs-card-tags">
-                      {job.categories.map((tag) => (
-                        <p className="jobs-card-tags-item" key={tag}>
-                          {tag}
-                        </p>
-                      ))}
+                      {job.categories.map((tag) => (<p className="jobs-card-tags-item" key={tag}>{tag}</p>))}
                     </div>
                   </div>
                 ) : (
                   <div className="jobs-selected-card" key={job.description}>
-                    <ReactMapGL
-                      {...job.viewport}
-                      mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
-                      mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo"
-                      pitch="60"
-                      bearing="-60"
+                    <ReactMapGL {...job.viewport} mapboxApiAccessToken={config.MAPBOX_TOKEN}mapStyle={config.MAPBOX_STYLE}
+                      pitch="60"bearing="-60" 
                     >
-                      <Marker
-                        offsetTop={-48}
-                        offsetLeft={-24}
-                        latitude={32.12257459473794}
-                        longitude={34.8154874641065}
-                      >
-                        <img
-                          src=" https://img.icons8.com/color/48/000000/marker.png"
-                          alt="img"
-                        />
+                      <Marker offsetTop={-48} offsetLeft={-24} latitude={32.12257459473794} longitude={34.8154874641065}>
+                        <img src=" https://img.icons8.com/color/48/000000/marker.png" alt="img"/>
                       </Marker>
                     </ReactMapGL>
                     <div className="jobs-selected-card-body">
@@ -815,10 +698,7 @@ export default class Myjobs extends Component {
                   </div>
                 ) : (
                   <div className="jobs-selected-card" key={job.description}>
-                    <ReactMapGL
-                      {...job.viewport}
-                      mapboxApiAccessToken="pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg"
-                      mapStyle="mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo"
+                    <ReactMapGL {...job.viewport} mapboxApiAccessToken={config.MAPBOX_TOKEN}mapStyle={config.MAPBOX_STYLE}
                       pitch="60"
                       bearing="-60"
                     >

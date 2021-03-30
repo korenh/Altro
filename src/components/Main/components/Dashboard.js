@@ -16,18 +16,8 @@ export default class Dashboard extends Component {
 
     return (
       <div className="dashboard">
-        {this.state.manageEmplyees ? (
-          <Manageusers Dashboard={this.props.Dashboard} job={this.props.job} />
-        ) : (
-          ""
-        )}
-        <ChevronLeftIcon
-          onClick={() => this.props.Dashboard()}
-          className="newjob-back-btn"
-          alt="img"
-          style={{ color: "white", fontsize: 40 }}
-        />
-
+        {this.state.manageEmplyees ? ( <Manageusers Dashboard={this.props.Dashboard} job={this.props.job} />) : ("")}
+        <ChevronLeftIcon onClick={() => this.props.Dashboard()} className="newjob-back-btn" alt="img" style={{ color: "white", fontsize: 40 }}/>
         <h1>Job Dashboard</h1>
         <div className="dashboard-info">
         <p>Statistics & info <br/><br/> Views , saves <br/><br/> Attending , requests <br/><br/> confirmed participating <br/><br/> Published on Date</p>
@@ -37,8 +27,7 @@ export default class Dashboard extends Component {
           <button className="jobs-selected-boost-button">{lang ? "שיפור" : "Boost"}</button>
           <button className="jobs-selected-save-button">{lang ? "ניהול" : "Manage"}</button>
           <button className="jobs-selected-save-button">{lang ? "עריכה" : "Edit"}</button>
-          <button className="jobs-selected-save-button">{lang ? "הודעות" : "Chat"}</button>
-          <br />
+          <button className="jobs-selected-save-button">{lang ? "הודעות" : "Chat"}</button><br />
           <button className="jobs-selected-finish-button">{lang ? "סיום" : "Finish Job"}</button>
           <button className="jobs-selected-delete-button" onClick={() => this.props.deleteJob(this.props.job)}>{lang ? "מחיקה" : "Delete Job"}</button>
         </div>

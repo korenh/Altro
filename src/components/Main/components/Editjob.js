@@ -3,6 +3,7 @@ import firebase from "../../Functions/Firebase";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 export default class Editjob extends Component {
+  
   state = {
     payment: this.props.job.payment,
     title: this.props.job.title,
@@ -10,18 +11,6 @@ export default class Editjob extends Component {
     requiredEmployees: this.props.job.requiredEmployees,
     startDate: new Date(),
     endDate: new Date(),
-  };
-
-  handleEnd = (date) => {
-    this.setState({
-      endDate: date,
-    });
-  };
-
-  handleStart = (date) => {
-    this.setState({
-      startDate: date,
-    });
   };
 
   Update = () => {
