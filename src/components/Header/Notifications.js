@@ -6,7 +6,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import StarsIcon from "@material-ui/icons/Stars";
 import ErrorIcon from "@material-ui/icons/Error";
 import HelpIcon from "@material-ui/icons/Help";
-import Review2 from "../Main/components/Review2";
+import ReviewEmployee from "../Main/components/ReviewEmployee";
 import UserContext from "../Functions/UserContext";
 
 export default class Notifications extends Component {
@@ -61,7 +61,7 @@ export default class Notifications extends Component {
     return (
       <div className="notifications">
         <button className="notifications-clear-all" onClick={() => this.deleteAllNotification()}>{lang ? "ניקוי כל ההתרראות" : "Clear All notification"}</button>
-        {this.state.reviewPop ? (<Review2 jobFinished={this.jobFinished} job={this.state.jobdata} />) : ("")}
+        {this.state.reviewPop ? (<ReviewEmployee jobFinished={this.jobFinished} job={this.state.jobdata} />) : ("")}
         {this.state.notifications.map((notification) => 
               notification.notificationType === "jobFinished" ? (
             <div className="card-notification" key={notification.id} onClick={() => this.jobFinished(notification)}>
