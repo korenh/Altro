@@ -1,14 +1,14 @@
 {
-  "MAPBOX_TOKEN":"pk.eyJ1Ijoia29yZW5oYW1yYSIsImEiOiJjazRscXBqeDExaWw2M2VudDU5OHFsN2tjIn0.Fl-5gMOM35kqUiLLjKNmgg",
-  "MAPBOX_STYLE":"mapbox://styles/korenhamra/ck4lsl9kd2euf1cnruee3zfbo",
+  "MAPBOX_TOKEN":"",
+  "MAPBOX_STYLE":"",
   "FIREBASE_SCHEME":{
-      "apiKey": "AIzaSyBbxuTxDeQbqO3Q6EawvRuwoFaelZbto4E",
-      "authDomain": "altro-db7f0.firebaseapp.com",
-      "databaseURL": "https://altro-db7f0.firebaseio.com",
-      "projectId": "altro-db7f0",
-      "storageBucket": "altro-db7f0.appspot.com",
-      "messagingSenderId": "28461951662",
-      "appId": "1:28461951662:web:fb1104b2c9ddca6acd9b3f"
+      "apiKey": "",
+      "authDomain": "",
+      "databaseURL": "",
+      "projectId": "",
+      "storageBucket": "",
+      "messagingSenderId": "",
+      "appId": ""
     },
-  "FIREBASE_DEAFULT_IMG":"https://firebasestorage.googleapis.com/v0/b/altro-db7f0.appspot.com/o/users%2F1593953149041.jpg?alt=media&token=62bd1a4f-78f6-4a94-b0b6-3b9ecbf27c8a"
+  "FIREBASE_DEAFULT_IMG":""
 }
